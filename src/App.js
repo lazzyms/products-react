@@ -1,58 +1,42 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Container from 'react-bootstrap/Container'
-import Table from 'react-bootstrap/Table';
-import Button from 'react-bootstrap/Button'
-import axios from 'axios';
-import Header from './Header'
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import Nav from 'react-bootstrap/Nav'
+import Navbar from 'react-bootstrap/Navbar'
+import Products from './Products'
+import Cart from './Cart'
 
-export default class App extends React.Component {
-  state = {
-    products: []
-  }
+export default function App() {
 
-  componentDidMount() {
-    axios.get('https://api4286.s3.ap-south-1.amazonaws.com/products.json').then(res => {
-      console.log(res.data)
-      const products = res.data
-      this.setState({ products })
-    })
-  }
+  return (
+    <Router>
+      <div>
+        <Navbar bg="light" expand="lg">
+          <Navbar.Brand>Shop</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto">
+              <Nav.Link href="/">Products</Nav.Link>
+              <Nav.Link href="/cart">Cart</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
 
-  render() {
-    return (
-      <Container fluid>
-        <Header></Header>
-        <Table bordered>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Product Name</th>
-              <th>Product Image</th>
-              <th>Description</th>
-              <th>Unit Price</th>
-              <th>Rating</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.products.map((product, i) =>
-              <tr>
-                <td>{i + 1}</td>
-                <td>{product.title}</td>
-                <td><img src={product.filename} height={product.height/5} width={product.width/5}></img></td>
-                <td>{product.description}</td>
-                <td>{product.price}</td>
-                <td>{product.rating}</td>
-                <td>
-                  <Button variant="primary">
-                  Add to cart</Button>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </Table>
-      </Container>
-    )
-  }
+        {/* A <Switch> looks through its children <Route>s and
+            renders the first one that matches the current URL. */}
+        <Switch>
+          <Route path="/cart">
+            <Cart />
+          </Route>
+          <Route path="/">
+            <Products />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
+  );
 }
